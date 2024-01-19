@@ -13,8 +13,8 @@ app.use(express.json());
 
 // Set up Handlebars view engine
 app.engine('handlebars', engine({
-    defaultLayout: 'main', // Specify your default layout
-    layoutsDir: path.join(__dirname, 'views/layouts'), // Point to your layouts directory
+    defaultLayout: 'main',
+    layoutsDir: path.join(__dirname, 'views/layouts')
 }));
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views')); // Point to your views directory
