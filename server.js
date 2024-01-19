@@ -1,6 +1,6 @@
 const express = require("express");
 const { engine } = require('express-handlebars');
-const path = require('path'); // Add this to use path.join
+const path = require('path'); 
 const sequelize = require('./config/connection');
 const userRoutes = require('./routes/userRoutes');
 
@@ -13,10 +13,10 @@ app.use(express.json());
 // Set up Handlebars view engine
 app.engine('handlebars', engine({
     defaultLayout: 'main', // Specify the name of your default layout
-    layoutsDir: path.join(__dirname, 'views/layouts'), // Specify the directory for layout files
+    layoutsDir: './views/layout/main'
 }));
 app.set('view engine', 'handlebars');
-app.set('views', path.join(__dirname, 'views')); // Specify the directory for view files
+app.set('views', './views'); // Specify the directory for view files
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
