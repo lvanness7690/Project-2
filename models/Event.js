@@ -14,7 +14,11 @@ const Event = sequelize.define('Event', {
         type: DataTypes.DATE,
         allowNull: false,
     },
-    // Add other fields as needed
+    messages: {
+        type: DataTypes.JSON,
+        allowNull: true,
+        defaultValue: [], 
+    },
 });
 
 module.exports = Event;
