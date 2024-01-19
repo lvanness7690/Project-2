@@ -19,6 +19,11 @@ const Event = sequelize.define('Event', {
         allowNull: true,
         defaultValue: [], 
     },
+    attendees: {
+        type: DataTypes.ARRAY(DataTypes.INTEGER),
+        allowNull: true,
+        defaultValue: [],
+    },
 });
 
 module.exports = Event;
