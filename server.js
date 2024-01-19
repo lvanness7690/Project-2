@@ -1,20 +1,31 @@
 const express = require("express");
 const { engine } = require('express-handlebars');
+const path = require('path');
 const sequelize = require('./config/connection');
-const userRoutes = require('./routes/userRoutes')
-
-const PORT = 3001;
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(express.json());
-app.engine('handlebars', engine());
+
+// Set up Handlebars view engine
+app.engine('handlebars', engine({
+    defaultLayout: 'main', // Specify your default layout
+    layoutsDir: path.join(__dirname, 'views/layouts'), // Point to your layouts directory
+}));
 app.set('view engine', 'handlebars');
+app.set('views', path.join(__dirname, 'views')); // Point to your views directory
 
 app.use(userRoutes);
 
-sequelize.sync({force: true }).then(() => {
+// Use the environment variable PORT or default to port 3001 if not available
+const PORT = process.env.PORT || 3001;
+
+sequelize.sync({ force: false }).then(() => {
     app.listen(PORT, () => {
-        console.log('Server listening on PORT 3001');
+        console.log(`Server listening on PORT ${PORT}`);
     });
 });
