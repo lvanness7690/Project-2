@@ -1,0 +1,19 @@
+{{> layouts/main }}
+
+<div class="flex justify-between p-4">
+    <a href="/" class="text-blue-600 hover:text-blue-800">Back</a>
+    <a href="/logout" class="text-blue-600 hover:text-blue-800">Logout</a>
+</div>
+
+<div class="text-center text-3xl font-bold my-4">My Events</div>
+
+<section class="container mx-auto p-4">
+    {{#each userEvents as |event|}}
+        <div class="p-4 border rounded my-2">
+            <h3 class="font-semibold">{{event.title}}</h3>
+            <p>{{event.date}}</p>
+            <p>{{event.description}}</p>
+            <a href="/event/{{event.id}}" class="text-blue-600 hover:text-blue-800">View Details</a>
+        </div>
+    {{/each}}
+</section>
