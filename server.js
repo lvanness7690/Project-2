@@ -4,7 +4,7 @@ const path = require('path');
 const sequelize = require('./config/connection');
 const userRoutes = require('./routes/userRoutes')
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001; // Use the Heroku provided port or default to 3001
 
 const app = express();
 
@@ -17,8 +17,21 @@ app.set('view engine', 'handlebars');
 
 app.use(userRoutes);
 
-sequelize.sync({force: true }).then(() => {
-    app.listen(PORT, () => {
-        console.log('Server listening on PORT 3001');
+// Import the 'db.js' file for database configuration
+const db = require('./db.js');
+
+sequelize.sync({ force: true }).then(() => {
+    // Use the database pool to execute queries
+    db.query('SELECT 1 + 1 AS result', (error, results, fields) => {
+        if (error) {
+            console.error('Error connecting to the database:', error);
+        } else {
+            console.log('Connected to the database successfully');
+        }
+
+        // Start the server after the database connection is established
+        app.listen(PORT, () => {
+            console.log(`Server listening on PORT ${PORT}`);
+        });
     });
 });
