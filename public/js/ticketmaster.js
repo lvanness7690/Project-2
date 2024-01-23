@@ -1,5 +1,4 @@
 var ticketmasterApiKey = "Yio3XUbIXelEwiILrUkFNWRza6M30sVO";
-var openWeatherMapApiKey = "fcdb77bcab0f5e656f374a185e3665bd";
 const city = "New York"; 
 
 function getEvents(city) {
