@@ -1,7 +1,7 @@
-var ticketmasterApiKey = "Yio3XUbIXelEwiILrUkFNWRza6M30sVO";
+var apiKey = "Yio3XUbIXelEwiILrUkFNWRza6M30sVO";
 const fetch = require('node-fetch'); // need to install the 'node-fetch' package
 
-const fetchEvents = (icketmasterApiKey, city) => {
+const fetchEvents = (apiKey, city) => {
   return new Promise((resolve, reject) => {
     fetch(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apiKey}&city=${city}`)
       .then(response => {
