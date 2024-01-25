@@ -4,27 +4,36 @@ const User = require("../models/User");
 
 // Route for the home page
 router.get('/', (req, res) => {
-    res.render('home'); // Renders the home.handlebars
+    if (req.session.logged_in) {
+        res.redirect('/events'); // Redirect to events page if already logged in
+    } else {
+        res.render('home'); // Render home.handlebars if not logged in
+    }
 });
 
 // Register new user
-router.post("/register", async (req, res) => {
+router.post('/register', async (req, res) => {
     try {
         // Hash the password
         const hashedPassword = await bcrypt.hash(req.body.password, 8);
 
-        // Create a new user with the hashed password
-        await User.create({
+        const userData = await User.create({
             email: req.body.email,
             password: hashedPassword,
         });
 
-        // Redirect to the events page after successful registration
-        res.redirect('/events');
-    } catch (error) {
-        console.error('Registration error:', error);
-        res.status(500).json({ message: 'Failed to create user' });
+        req.session.save(() => {
+            req.session.user_id = userData.id;
+            req.session.logged_in = true;
+
+            res.redirect('/events'); // Redirect to events after successful registration
+        });
+    } catch (err) {
+        console.error('Registration error:', err);
+        res.status(400).json(err);
     }
 });
+
+// ... login and logout routes ...
 
 module.exports = router;

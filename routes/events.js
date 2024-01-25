@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const Event = require('../models/Event');
+// Include User model if it's being used
+const User = require('../models/User'); // Uncomment if User model is needed
 
+// API route to fetch all events
 router.get('/api/events', async (req, res) => {
     try {
-        // Fetch all events
         const events = await Event.findAll();
-
         res.status(200).json(events);
     } catch (error) {
         console.error('Error fetching events:', error);
@@ -14,7 +15,7 @@ router.get('/api/events', async (req, res) => {
     }
 });
 
-// Get attendees for a specific event
+// API route to get attendees for a specific event
 router.get('/api/events/:eventId/attendees', async (req, res) => {
     const eventId = req.params.eventId;
 
@@ -25,6 +26,7 @@ router.get('/api/events/:eventId/attendees', async (req, res) => {
             return res.status(404).json({ error: 'Event not found' });
         }
 
+        // Assuming a relationship setup, fetching attendees
         const attendees = await User.findAll({
             where: { id: event.attendees },
         });
@@ -36,7 +38,7 @@ router.get('/api/events/:eventId/attendees', async (req, res) => {
     }
 });
 
-// Add an attendee to a specific event
+// API route to add an attendee to a specific event
 router.post('/api/events/:eventId/attendees', async (req, res) => {
     const eventId = req.params.eventId;
     const { userId } = req.body;
@@ -48,7 +50,7 @@ router.post('/api/events/:eventId/attendees', async (req, res) => {
             return res.status(404).json({ error: 'Event not found' });
         }
 
-        // Check if the user is not already an attendee
+        // Logic for adding attendees (this might need adjustment based on your DB schema)
         if (!event.attendees.includes(userId)) {
             event.attendees.push(userId);
             await event.save();
@@ -61,3 +63,15 @@ router.post('/api/events/:eventId/attendees', async (req, res) => {
     }
 });
 
+// New route to render the 'events' page
+router.get('/events', async (req, res) => {
+    try {
+        const events = await Event.findAll();
+        res.render('events', { events }); // Render 'events.handlebars' with the events data
+    } catch (error) {
+        console.error('Error rendering events page:', error);
+        res.status(500).render('error', { error: 'Internal Server Error' }); // Ensure 'error.handlebars' exists
+    }
+});
+
+module.exports = router;

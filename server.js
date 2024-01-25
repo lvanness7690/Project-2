@@ -1,37 +1,45 @@
 const express = require("express");
+const session = require('express-session');
 const { engine } = require('express-handlebars');
 const path = require('path');
 const sequelize = require('./config/connection');
-const userRoutes = require('./routes/userRoutes')
+const userRoutes = require('./routes/userRoutes');
+const eventsRoutes = require('./routes/events');
 
-const PORT = process.env.PORT || 3001; // Use the Heroku provided port or default to 3001
+const PORT = process.env.PORT || 3001;
 
 const app = express();
 
-// Serve static files from the 'public' directory
+// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Parse JSON and urlencoded data
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Initialize Handlebars
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 
+// Initialize session middleware
+app.use(session({
+    secret: 'your secret key', // Replace with a real secret key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: 'auto' } // 'auto' or true if using HTTPS
+}));
+
+// Use routes
 app.use(userRoutes);
+app.use(eventsRoutes); // Add this line to use the events routes
 
-// Import the 'db.js' file for database configuration
-const db = require('./db.js');
+// Establish Model Relationships
+// Assuming you have an index.js in your models directory that sets up relationships
+require('./models'); 
 
+// Sync Sequelize models to the database, then start the server
 sequelize.sync({ force: true }).then(() => {
-    // Use the database pool to execute queries
-    db.query('SELECT 1 + 1 AS result', (error, results, fields) => {
-        if (error) {
-            console.error('Error connecting to the database:', error);
-        } else {
-            console.log('Connected to the database successfully');
-        }
-
-        // Start the server after the database connection is established
-        app.listen(PORT, () => {
-            console.log(`Server listening on PORT ${PORT}`);
-        });
+    app.listen(PORT, () => {
+        console.log(`Server listening on PORT ${PORT}`);
     });
 });
