@@ -1,7 +1,8 @@
-var apiKey = "Yio3XUbIXelEwiILrUkFNWRza6M30sVO";
-const fetch = require('node-fetch'); // need to install the 'node-fetch' package
+const fetch = require('node-fetch');
 
-const fetchEvents = (apiKey, city) => {
+var apiKey = "Yio3XUbIXelEwiILrUkFNWRza6M30sVO";
+
+const fetchEvents = (city) => {
   return new Promise((resolve, reject) => {
     fetch(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apiKey}&city=${city}`)
       .then(response => {
@@ -16,3 +17,17 @@ const fetchEvents = (apiKey, city) => {
 };
 
 module.exports = { fetchEvents };
+
+// ticketmaster.js
+//if (require.main === module) {
+  // Example usage for standalone testing
+  //const city = "New York";
+  //fetchEvents(city)
+    //.then(eventData => {
+    //  console.log("Standalone Event Data:", eventData);
+    //})
+    //.catch(error => {
+    //  console.error('Error fetching events:', error);
+   // });
+
+
