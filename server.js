@@ -2,7 +2,9 @@ const express = require("express");
 const { engine } = require('express-handlebars');
 const path = require('path');
 const sequelize = require('./config/connection');
-const userRoutes = require('./routes/userRoutes');
+const userRoutes = require('./routes/userRoutes')
+
+const PORT = process.env.PORT || 3001; // Use the Heroku provided port or default to 3001
 
 const app = express();
 
@@ -10,22 +12,26 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.json());
-
-// Set up Handlebars view engine
-app.engine('handlebars', engine({
-    defaultLayout: 'main',
-    layoutsDir: path.join(__dirname, 'views/layouts')
-}));
+app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
-app.set('views', path.join(__dirname, 'views')); // Point to your views directory
 
 app.use(userRoutes);
 
-// Use the environment variable PORT or default to port 3001 if not available
-const PORT = process.env.PORT || 3001;
+// Import the 'db.js' file for database configuration
+const db = require('./db.js');
 
-sequelize.sync({ force: false }).then(() => {
-    app.listen(PORT, () => {
-        console.log(`Server listening on PORT ${PORT}`);
+sequelize.sync({ force: true }).then(() => {
+    // Use the database pool to execute queries
+    db.query('SELECT 1 + 1 AS result', (error, results, fields) => {
+        if (error) {
+            console.error('Error connecting to the database:', error);
+        } else {
+            console.log('Connected to the database successfully');
+        }
+
+        // Start the server after the database connection is established
+        app.listen(PORT, () => {
+            console.log(`Server listening on PORT ${PORT}`);
+        });
     });
 });
