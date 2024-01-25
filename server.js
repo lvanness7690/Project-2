@@ -11,6 +11,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.json());
 
+app.use(userRoutes);
+
 // Set up Handlebars view engine
 app.engine('handlebars', engine({
     defaultLayout: 'main',
@@ -19,7 +21,12 @@ app.engine('handlebars', engine({
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views')); // Point to your views directory
 
-app.use(userRoutes);
+//Sessions
+app.use(session({
+    secret: 'your_secret_key',
+    resave: true,
+    saveUninitialized: true,
+  }));
 
 // Use the environment variable PORT or default to port 3001 if not available
 const PORT = process.env.PORT || 3001;
