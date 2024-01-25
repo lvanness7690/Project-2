@@ -4,3 +4,4 @@ const Event = require('./Event');
 User.belongsToMany(Event, { through: 'User_Events' });
 Event.belongsToMany(User, { through: 'User_Events' });
 
+module.exports = { User, Event };

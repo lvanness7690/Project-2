@@ -1,8 +1,9 @@
 const express = require("express");
 const { engine } = require('express-handlebars');
 const path = require('path');
+const routes = require('./controllers');
 const sequelize = require('./config/connection');
-const userRoutes = require('./routes/userRoutes');
+
 const db = require('./db.js');
 
 const PORT = process.env.PORT || 3001; // Use the Heroku provided port or default to 3001
@@ -16,7 +17,7 @@ app.use(express.json());
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 
-app.use(userRoutes);
+app.use(routes);
 
 //Sessions
 app.use(session({
