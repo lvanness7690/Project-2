@@ -1,47 +1,26 @@
-const express = require('express');
-const router = express.Router();
-const User = require('../models/User'); // Assuming you have a User model
+const User = require("../models/User");
 
-// User Registration
-router.post('/register', async (req, res) => {
-  try {
-    // Directly use the password (not recommended for production)
-    const password = req.body.password;
-
-    // Create a new user record in your database
-    const newUser = await User.create({
-      email: req.body.email,
-      password: password, // Storing the password directly (not secure)
+router.get('/api/user', (req, res) => {
+    User.findAll().then((data) => {
+        res.json(data);
     });
-
-    // Redirect to the events page after successful registration
-    res.redirect('/events');
-  } catch (error) {
-    // Handle errors (e.g., user already exists)
-    res.status(500).send('Error registering new user');
-  }
 });
 
-// User Login
-router.post('/login', async (req, res) => {
-  try {
-    // Find the user by email
-    const user = await User.findOne({ where: { email: req.body.email } });
-    if (!user) {
-      return res.status(400).send('User not found');
+router.post("/api/user", async (req, res) => {
+    try {
+        const newUser = User.create(req.body);
+        res.json(newUser);
+    } catch (error) {
+        res.status(500).json({ message: 'failed to create user' });
     }
+});
 
-    // Directly compare the password (not secure)
-    if (req.body.password !== user.password) {
-      return res.status(400).send('Invalid password');
-    }
+router.get('/', (req, res) => {
+    res.render('home');
+});
 
-    // Redirect to the events page after successful login
-    res.redirect('/events');
-  } catch (error) {
-    // Handle errors
-    res.status(500).send('Error logging in');
-  }
+router.get('/home', (req, res) => {
+    res.render('home');
 });
 
 module.exports = router;
