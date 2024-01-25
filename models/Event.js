@@ -3,9 +3,8 @@ const sequelize = require('../config/database');
 
 const Event = sequelize.define('Event', {
     id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         primaryKey: true,
-        autoIncrement: true,
     },
     title: {
         type: DataTypes.STRING,
