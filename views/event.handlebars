@@ -1,15 +1,21 @@
-{{> layouts/main }}
+<!-- Event Detail Page -->
 
+<!-- Navigation Links -->
 <div class="flex justify-between p-4">
     <a href="/dashboard" class="text-blue-600 hover:text-blue-800">Back</a>
     <a href="/dashboard" class="text-blue-600 hover:text-blue-800">My Events</a>
 </div>
 
+<!-- Event Information -->
 <article class="container mx-auto p-4">
+    <!-- Event Title -->
     <h2 class="text-3xl font-bold my-4">{{event.title}}</h2>
+    <!-- Event Date -->
     <p>{{event.date}}</p>
+    <!-- Event Description -->
     <p>{{event.description}}</p>
 
+    <!-- Attending Button and Attendees List -->
     <h3 class="font-semibold mt-4">Attending:</h3>
     <ul>
         {{#each event.attendees as |attendee|}}
@@ -17,6 +23,7 @@
         {{/each}}
     </ul>
 
+    <!-- Message Board Section -->
     <h3 class="font-semibold mt-4">Messages:</h3>
     <div class="border p-2">
         {{#each event.messages as |message|}}
