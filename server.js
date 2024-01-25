@@ -2,7 +2,8 @@ const express = require("express");
 const { engine } = require('express-handlebars');
 const path = require('path');
 const sequelize = require('./config/connection');
-const userRoutes = require('./routes/userRoutes')
+const userRoutes = require('./routes/userRoutes');
+const db = require('./db.js');
 
 const PORT = process.env.PORT || 3001; // Use the Heroku provided port or default to 3001
 
@@ -17,10 +18,15 @@ app.set('view engine', 'handlebars');
 
 app.use(userRoutes);
 
-// Import the 'db.js' file for database configuration
-const db = require('./db.js');
+//Sessions
+app.use(session({
+    secret: 'your_secret_key',
+    resave: true,
+    saveUninitialized: true,
+  }));
 
-sequelize.sync({ force: true }).then(() => {
+
+  sequelize.sync({ force: true }).then(() => {
     // Use the database pool to execute queries
     db.query('SELECT 1 + 1 AS result', (error, results, fields) => {
         if (error) {
