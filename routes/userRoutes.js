@@ -1,27 +1,29 @@
 const router = require("express").Router();
+const bcrypt = require('bcryptjs');
 const User = require("../models/User");
 
-router.get('/api/user', (req, res) => {
-    User.findAll().then((data) => {
-        res.json(data);
-    });
-});
+// ... existing routes ...
 
-router.post("/api/user", async (req, res) => {
+// Register new user
+router.post("/register", async (req, res) => {
     try {
-        const newUser = User.create(req.body);
-        res.json(newUser);
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(req.body.password, 8);
+
+        // Create a new user with the hashed password
+        const newUser = await User.create({
+            email: req.body.email,
+            password: hashedPassword,
+        });
+
+        // Redirect to the events page after successful registration
+        res.redirect('/events'); // Make sure you have a route to render this page
     } catch (error) {
-        res.status(500).json({ message: 'failed to create user' });
+        console.error('Registration error:', error);
+        res.status(500).json({ message: 'Failed to create user' });
     }
 });
 
-router.get('/', (req, res) => {
-    res.render('home');
-});
-
-router.get('/home', (req, res) => {
-    res.render('home');
-});
+// ... remaining routes ...
 
 module.exports = router;
