@@ -27,12 +27,4 @@ router.post("/register", async (req, res) => {
     }
 });
 
-// Add additional routes as needed, for example:
-// router.get('/events', (req, res) => {
-//     // Logic to fetch events data (if needed)
-//     res.render('events'); // Renders the events.handlebars
-// });
-
-// ... other routes ...
-
 module.exports = router;
