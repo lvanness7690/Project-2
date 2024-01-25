@@ -21,7 +21,7 @@ async function fetchAttendees(eventId) {
 // Function to join the event
 async function joinEvent() {
     const eventId = 1; // Replace with the actual event ID
-    const userId = 1; // Replace with the actual user ID
+    const userId = 1; // Replace with the actual user ID that will be stored in Local Storage as a token through the session
 
     try {
         const response = await fetch(`/api/events/${eventId}/attendees`, {
