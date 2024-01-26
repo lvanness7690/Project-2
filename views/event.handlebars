@@ -7,23 +7,23 @@
 </div>
 
 <!-- Event Information -->
-<article class="container mx-auto p-4">
+<article class="container mx-auto p-4 event-details">
     <!-- Event Title -->
-    <h2 class="text-3xl font-bold my-4 event-title">Event Title not available</h2>
+    <h2 class="text-3xl font-bold my-4 event-title">{{event.name}}</h2>
     
     <!-- Event Date -->
-    <p class="event-date">Date: Date not available</p>
+    <p class="event-date">Date: {{event.date}}</p>
     
-    <!-- Event Location (with conditional check) -->
-    <p class="event-location">Location: Location not available</p>
+    <!-- Event Location -->
+    <p class="event-location">Location: {{event.location}}</p>
 
     <!-- Event Photo (if available) -->
-    <img src="" alt="Event Photo" class="max-w-full my-4 event-image">
+    <img src="{{event.image}}" alt="{{event.name}}" class="max-w-full my-4 event-image">
     
     <!-- Event Description (if available) -->
-    <p class="event-description">No description available</p>
+    <p class="event-description">{{event.description}}</p>
 
-    <!-- Attending Button and Attendees List -->
+    <!-- Attending List -->
     <h3 class="font-semibold mt-4">Attending:</h3>
     <ul>
         {{#each event.attendees as |attendee|}}
@@ -33,12 +33,10 @@
 
     <!-- Message Board Section -->
     <h3 class="font-semibold mt-4">Messages:</h3>
-    <div class="border p-2">
+    <div class="border p-2 message-board">
         {{#each event.messages as |message|}}
             <p>{{message.content}}</p>
         {{/each}}
     </div>
 </article>
 
-<!-- Include the script file at the bottom of your event.handlebars template -->
-<script src="/js/event-details.js"></script>

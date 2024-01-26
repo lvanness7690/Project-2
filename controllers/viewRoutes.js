@@ -6,19 +6,16 @@ const session = require('express-session');
 
 // Configure express-session
 router.use(session({
-  secret: 'your-secret-key', // Change this to a more secure secret
+  secret: process.env.SESSION_SECRET, // Make sure to have SESSION_SECRET in your .env file
   resave: false,
   saveUninitialized: true,
 }));
 
 // Route for the home page
 router.get('/', (req, res) => {
-  // Check if the user is logged in
   if (req.session.isLoggedIn) {
-    // User is logged in, you can redirect them to another page or do something else
     res.redirect('/events');
   } else {
-    // User is not logged in, render the home page
     res.render('home'); // Renders home.handlebars
   }
 });
@@ -38,12 +35,9 @@ router.get('/api/search-events', async (req, res) => {
   try {
     const city = req.query.city;
     const apiKey = process.env.TICKETMASTER_API_KEY;
-
     const url = `https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apiKey}&city=${encodeURIComponent(city)}`;
-
     const response = await axios.get(url);
     const events = response.data._embedded ? response.data._embedded.events : [];
-
     res.json(events);
   } catch (error) {
     console.error('Error fetching events from Ticketmaster:', error);
@@ -51,23 +45,30 @@ router.get('/api/search-events', async (req, res) => {
   }
 });
 
-// Route for event details page
-router.get('/events/:eventId', async (req, res) => {
+// Route for individual event details page
+router.get('/event/:eventId', async (req, res) => {
   try {
     const eventId = req.params.eventId;
     const apiKey = process.env.TICKETMASTER_API_KEY;
-
-    // Fetch event details from the Ticketmaster API based on eventId
     const url = `https://app.ticketmaster.com/discovery/v2/events/${eventId}.json?apikey=${apiKey}`;
     const response = await axios.get(url);
-    const eventDetails = response.data || {}; // Event details from Ticketmaster API
+    const eventDetails = response.data;
 
-    // Render the event.handlebars template with the fetched event details
-    res.render('event', { event: eventDetails });
+    const event = {
+      name: eventDetails.name,
+      date: eventDetails.dates.start.localDate,
+      location: eventDetails._embedded.venues[0].name,
+      image: eventDetails.images[0].url,
+      description: eventDetails.info,
+    };
+
+    res.render('event', { event }); // Renders event.handlebars with the event details
   } catch (error) {
     console.error('Error fetching event details from Ticketmaster:', error);
     res.status(500).send('Internal Server Error');
   }
 });
+
+// Add routes for other handlebars pages here if needed
 
 module.exports = router;

@@ -8,16 +8,19 @@ async function fetchEventDetails(eventId) {
       const eventData = await response.json();
 
       // Update the page content with the fetched data
-      document.querySelector('.event-title').textContent = eventData.name || 'Event Title not available';
-      document.querySelector('.event-date').textContent = `Date: ${formatDate(eventData.dates.start.localDate) || 'Date not available'}`;
-      const location = eventData._embedded && eventData._embedded.venues ? eventData._embedded.venues[0].name : 'Location not available';
-      document.querySelector('.event-location').textContent = `Location: ${location}`;
-      if (eventData.images && eventData.images.length > 0) {
-          document.querySelector('.event-image').src = eventData.images[0].url;
-          document.querySelector('.event-image').alt = eventData.name || 'Event Photo';
-      }
-      const description = eventData.info || 'No description available';
-      document.querySelector('.event-description').textContent = description;
+      const template = document.querySelector('.event-details');
+      const html = template.innerHTML;
+
+      // Replace placeholders with actual event details
+      const eventHTML = html
+          .replace('{{event.name}}', eventData.name || 'Event Title not available')
+          .replace('{{event.date}}', `Date: ${formatDate(eventData.dates.start.localDate) || 'Date not available'}`)
+          .replace('{{event.location}}', `Location: ${eventData._embedded && eventData._embedded.venues ? eventData._embedded.venues[0].name : 'Location not available'}`)
+          .replace('{{event.image}}', eventData.images && eventData.images.length > 0 ? eventData.images[0].url : '')
+          .replace('{{event.description}}', eventData.info || 'No description available');
+
+      // Update the event-details container with the rendered HTML
+      template.innerHTML = eventHTML;
 
       // You can update the attending list and message board similarly
 
