@@ -1,6 +1,5 @@
 // server.js
 // Main file for setting up the Express server
-
 const express = require("express");
 const { engine } = require('express-handlebars');
 const session = require('express-session');
