@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const User = require("../models/User");
+const User = require("../models/User.js");
 
 router.get('/api/user', (req, res) => {
     User.findAll().then((data) => {
