@@ -1,31 +1,26 @@
+// controllers/api/messages.js
+// Handles routes related to message operations on events
+
 const express = require('express');
 const router = express.Router();
-const Event = require('../../models/Event');
-const User = require('../../models/User');
+const { Event } = require('../../models'); // Correct path assuming standard Express project structure
 
+// POST a new message to an event
 router.post('/', async (req, res) => {
-    try {
-        const { content, userId, eventId } = req.body;
+    const { content, userId, eventId } = req.body;
 
-        // Find the event by ID
+    try {
         const event = await Event.findByPk(eventId);
 
         if (!event) {
             return res.status(404).json({ error: 'Event not found' });
         }
 
-        // Create a new message object
-        const newMessage = {
-            content,
-            userId,
-        };
+        // Assuming messages is a JSON field, and you're appending new messages to it
+        const newMessage = { content, userId };
+        event.messages = [...event.messages, newMessage];
 
-        // Add the message to the event's messages array
-        event.messages.push(newMessage);
-
-        // Save the updated event with the new message
         await event.save();
-
         res.status(201).json(newMessage);
     } catch (error) {
         console.error('Error posting message:', error);

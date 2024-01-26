@@ -1,8 +1,16 @@
-const router = require('express').Router();
-const apiRoutes = require('./api');
-const homeRoutes = require('./viewRoutes');
+// controllers/index.js
+// Aggregates all controller routes
 
-router.use('/', homeRoutes);
+const router = require('express').Router();
+
+// Import other route groups
+const apiRoutes = require('./api');
+const viewRoutes = require('./viewRoutes');
+
+// Setup API routes under '/api' prefix
 router.use('/api', apiRoutes);
+
+// Setup view routes
+router.use('/', viewRoutes);
 
 module.exports = router;

@@ -1,7 +1,13 @@
-const { DataTypes, Model} = require('sequelize');
-const sequelize = require('../config/connection');
+// models/Event.js
+// Sequelize model definition for Events
 
-const Event = sequelize.define('Event', {
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../config/connection'); // Corrected path to match your connection.js file
+
+class Event extends Model {}
+
+Event.init({
+    // Model attributes are defined here
     id: {
         type: DataTypes.STRING,
         primaryKey: true,
@@ -21,11 +27,21 @@ const Event = sequelize.define('Event', {
     messages: {
         type: DataTypes.JSON,
         allowNull: true,
+        defaultValue: [],
     },
+    // MySQL does not support the ARRAY type. This needs to be changed to JSON or another approach
+    // such as a join table if you're using MySQL.
     attendees: {
-        type: DataTypes.JSON,
+        type: DataTypes.JSON, // Changed from ARRAY to JSON for MySQL compatibility
         allowNull: true,
+        defaultValue: [],
     },
+}, {
+    sequelize,
+    modelName: 'Event',
+    timestamps: false,
+    freezeTableName: true,
+    underscored: true,
 });
 
 module.exports = Event;
