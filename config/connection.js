@@ -1,4 +1,6 @@
-const Sequelize = require("sequelize");
+// config/connection.js
+
+const Sequelize = require('sequelize'); // Import Sequelize
 require('dotenv').config();
 
 let sequelize;

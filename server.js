@@ -1,44 +1,41 @@
+// server.js
+// Main file for setting up the Express server
+
 const express = require("express");
 const { engine } = require('express-handlebars');
+const session = require('express-session');
 const path = require('path');
-const routes = require('./controllers');
+const routes = require('./controllers'); // Importing aggregated routes
 const sequelize = require('./config/connection');
 
-const db = require('./db.js');
-
-const PORT = process.env.PORT || 3001; // Use the Heroku provided port or default to 3001
-
+const PORT = process.env.PORT || 3001;
 const app = express();
 
-// Serve static files from the 'public' directory
+// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Middleware for parsing JSON and urlencoded form data
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Setup Handlebars as the view engine
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 
+// Setup session middleware
+app.use(session({
+    secret: 'your_secret_key', // Change for production
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: 'auto' }
+}));
+
+// Use the aggregated routes from controllers
 app.use(routes);
 
-//Sessions
-app.use(session({
-    secret: 'your_secret_key',
-    resave: true,
-    saveUninitialized: true,
-  }));
-
-
-  sequelize.sync({ force: true }).then(() => {
-    // Use the database pool to execute queries
-    db.query('SELECT 1 + 1 AS result', (error, results, fields) => {
-        if (error) {
-            console.error('Error connecting to the database:', error);
-        } else {
-            console.log('Connected to the database successfully');
-        }
-
-        // Start the server after the database connection is established
-        app.listen(PORT, () => {
-            console.log(`Server listening on PORT ${PORT}`);
-        });
+// Sync Sequelize models to the database, then start the server
+sequelize.sync({ force: false }).then(() => {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
     });
 });

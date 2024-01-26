@@ -1,12 +1,14 @@
+// controllers/api/events.js
+// Handles routes related to event operations
+
 const express = require('express');
 const router = express.Router();
-const Event = require('../models/Event');
+const { Event, User } = require('../../models'); // Correct path assuming standard Express project structure
 
-router.get('/api/events', async (req, res) => {
+// GET all events
+router.get('/', async (req, res) => {
     try {
-        // Fetch all events
         const events = await Event.findAll();
-
         res.status(200).json(events);
     } catch (error) {
         console.error('Error fetching events:', error);
@@ -15,21 +17,20 @@ router.get('/api/events', async (req, res) => {
 });
 
 // Get attendees for a specific event
-router.get('/api/events/:eventId/attendees', async (req, res) => {
+router.get('/:eventId/attendees', async (req, res) => {
     const eventId = req.params.eventId;
 
     try {
-        const event = await Event.findByPk(eventId);
+        const event = await Event.findByPk(eventId, {
+            include: [{ model: User }] // Assuming there's an association set up to include users
+        });
 
         if (!event) {
             return res.status(404).json({ error: 'Event not found' });
         }
 
-        const attendees = await User.findAll({
-            where: { id: event.attendees },
-        });
-
-        res.status(200).json(attendees);
+        // Assuming that `attendees` is a properly formatted JSON field or association
+        res.status(200).json(event.attendees);
     } catch (error) {
         console.error('Error fetching attendees:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -37,22 +38,21 @@ router.get('/api/events/:eventId/attendees', async (req, res) => {
 });
 
 // Add an attendee to a specific event
-router.post('/api/events/:eventId/attendees', async (req, res) => {
+router.post('/:eventId/attendees', async (req, res) => {
     const eventId = req.params.eventId;
-    const { userId } = req.body;
+    const userId = req.body.userId;
 
     try {
+        // Assuming there's a many-to-many relationship between Events and Users
+        const user = await User.findByPk(userId);
         const event = await Event.findByPk(eventId);
 
-        if (!event) {
-            return res.status(404).json({ error: 'Event not found' });
+        if (!event || !user) {
+            return res.status(404).json({ error: 'Event or User not found' });
         }
 
-        // Check if the user is not already an attendee
-        if (!event.attendees.includes(userId)) {
-            event.attendees.push(userId);
-            await event.save();
-        }
+        // Add the user as an attendee
+        await event.addUser(user); // This method is automatically created by Sequelize for many-to-many relations
 
         res.status(201).json({ message: 'Attendee added successfully' });
     } catch (error) {
@@ -60,6 +60,5 @@ router.post('/api/events/:eventId/attendees', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
 
 module.exports = router;
