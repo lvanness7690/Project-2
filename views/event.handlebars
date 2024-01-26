@@ -2,18 +2,26 @@
 
 <!-- Navigation Links -->
 <div class="flex justify-between p-4">
-    <a href="/dashboard" class="text-blue-600 hover:text-blue-800">Back</a>
+    <a href="/events" class="text-blue-600 hover:text-blue-800">Back</a>
     <a href="/dashboard" class="text-blue-600 hover:text-blue-800">My Events</a>
 </div>
 
 <!-- Event Information -->
 <article class="container mx-auto p-4">
     <!-- Event Title -->
-    <h2 class="text-3xl font-bold my-4">{{event.title}}</h2>
+    <h2 class="text-3xl font-bold my-4 event-title"></h2>
+    
     <!-- Event Date -->
-    <p>{{event.date}}</p>
-    <!-- Event Description -->
-    <p>{{event.description}}</p>
+    <p class="event-date"></p>
+    
+    <!-- Event Location (with conditional check) -->
+    <p class="event-location"></p>
+
+    <!-- Event Photo (if available) -->
+    <img src="" alt="" class="max-w-full my-4 event-image">
+    
+    <!-- Event Description (if available) -->
+    <p class="event-description"></p>
 
     <!-- Attending Button and Attendees List -->
     <h3 class="font-semibold mt-4">Attending:</h3>
@@ -31,3 +39,6 @@
         {{/each}}
     </div>
 </article>
+
+<!-- Include the script file at the bottom of your event.handlebars template -->
+<script src="/js/event-details.js"></script>

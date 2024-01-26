@@ -44,7 +44,7 @@ router.get('/api/search-events', async (req, res) => {
     const response = await axios.get(url);
     const events = response.data._embedded ? response.data._embedded.events : [];
 
-    res.json(events);
+    res.render('events', { events }); // Renders events.handlebars with the search results
   } catch (error) {
     console.error('Error fetching events from Ticketmaster:', error);
     res.status(500).json({ error: 'Internal Server Error' });
