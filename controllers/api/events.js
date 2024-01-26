@@ -61,3 +61,5 @@ router.post('/api/events/:eventId/attendees', async (req, res) => {
     }
 });
 
+
+module.exports = router;
