@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const { Event, User } = require('../models');
-const withAuth = require('../utils/auth');
+const { Event, User } = require('../models.js');
+const withAuth = require('../utils/auth.js');
 const axios = require('axios'); //Install this dependency
 require('dotenv').config();
 

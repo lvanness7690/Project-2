@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const Event = require('../models/Event');
-const User = require('../models/User');
+const Event = require('../models/Event.js');
+const User = require('../models/User.js');
 
-router.post('/api/messages', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const { content, userId, eventId } = req.body;
 
