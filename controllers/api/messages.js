@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Event = require('../models/Event.js');
-const User = require('../models/User.js');
+const Event = require('../../models/Event');
+const User = require('../../models/User');
 
 router.post('/', async (req, res) => {
     try {

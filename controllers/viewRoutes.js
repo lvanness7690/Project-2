@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Event, User } = require('../models.js');
+const { Event, User } = require('../models');
 const withAuth = require('../utils/auth.js');
 const axios = require('axios'); //Install this dependency
 require('dotenv').config();
@@ -7,10 +7,8 @@ require('dotenv').config();
 
 router.get('/',  (req, res) => {
   try {
-
-    // Pass serialized data and session flag into template
     res.render('home', {  
-      logged_in: req.session.logged_in 
+      logged_in: true
     });
   } catch (err) {
     res.status(500).json(err);
@@ -18,7 +16,7 @@ router.get('/',  (req, res) => {
 });
 
 
-router.get('/events', async (req, res) => {
+router.get('/events', withAuth, async (req, res) => {
   try {
     const city = req.query.city; // Get city from query parameters
     const keyword = req.query.keyword; // Get keyword from query parameters
@@ -69,7 +67,7 @@ router.get('/events', async (req, res) => {
     // Transform Sequelize model data
     const events = eventsData.map((event) => event.get({ plain: true }));
 
-    res.render('events', {events });
+    res.render('event', {events });
   } catch (error) {
     console.error('Error searching for or processing events:', error);
     res.status(500).json({ error: 'Internal Server Error' });

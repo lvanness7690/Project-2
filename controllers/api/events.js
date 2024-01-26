@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const Event = require('../models/Event.js');
+const Event = require('../../models/Event');
 
-router.get('/api/events', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         // Fetch all events
         const events = await Event.findAll();
@@ -15,7 +15,7 @@ router.get('/api/events', async (req, res) => {
 });
 
 // Get attendees for a specific event
-router.get('/api/events/:eventId/attendees', async (req, res) => {
+router.get('/:eventId/attendees', async (req, res) => {
     const eventId = req.params.eventId;
 
     try {
@@ -37,7 +37,7 @@ router.get('/api/events/:eventId/attendees', async (req, res) => {
 });
 
 // Add an attendee to a specific event
-router.post('/api/events/:eventId/attendees', async (req, res) => {
+router.post('/:eventId/attendees', async (req, res) => {
     const eventId = req.params.eventId;
     const { userId } = req.body;
 

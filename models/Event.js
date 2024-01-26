@@ -1,5 +1,5 @@
 const { DataTypes, Model} = require('sequelize');
-const sequelize = require('../config/database');
+const sequelize = require('../config/connection');
 
 const Event = sequelize.define('Event', {
     id: {
@@ -21,12 +21,10 @@ const Event = sequelize.define('Event', {
     messages: {
         type: DataTypes.JSON,
         allowNull: true,
-        defaultValue: [], 
     },
     attendees: {
-        type: DataTypes.ARRAY(DataTypes.INTEGER),
+        type: DataTypes.JSON,
         allowNull: true,
-        defaultValue: [],
     },
 });
 

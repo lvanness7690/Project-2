@@ -1,10 +1,10 @@
 const router = require('express').Router();
-const userRoutes = require('./userRoutes.js');
-const eventsRoutes = require('./events.js');
-const messageRoutes = require('./messages.js');
+const userRoutes = require('./userRoutes');
+const eventsRoutes = require('./events');
+const messageRoutes = require('./messages');
 
-router.use('/api/user', userRoutes);
-router.use('/api/events', eventsRoutes);
-router.use('/api/messages', messageRoutes);
+router.use('/user', userRoutes);
+router.use('/events', eventsRoutes);
+router.use('/messages', messageRoutes);
 
 module.exports = router;

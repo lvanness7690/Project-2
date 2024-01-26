@@ -1,13 +1,14 @@
 const router = require("express").Router();
-const User = require("../models/User.js");
+const User = require("../../models/User");
 
-router.get('/api/user', (req, res) => {
+router.get('/', (req, res) => {
     User.findAll().then((data) => {
         res.json(data);
     });
+    //Create Session
 });
 
-router.post("/api/user", async (req, res) => {
+router.post("/", async (req, res) => {
     try {
         const newUser = User.create(req.body);
         res.json(newUser);
@@ -15,13 +16,6 @@ router.post("/api/user", async (req, res) => {
         res.status(500).json({ message: 'failed to create user' });
     }
 });
-
-router.get('/', (req, res) => {
-    res.render('home');
-});
-
-router.get('/home', (req, res) => {
-    res.render('home');
-});
+//Create Session 
 
 module.exports = router;
