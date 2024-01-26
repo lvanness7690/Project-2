@@ -2,8 +2,7 @@ const express = require('express');
 const axios = require('axios');
 require('dotenv').config();
 const router = express.Router();
-const { Event } = require('../models');
-const session = require('express-session'); // Import express-session
+const session = require('express-session');
 
 // Configure express-session
 router.use(session({
@@ -49,6 +48,25 @@ router.get('/api/search-events', async (req, res) => {
   } catch (error) {
     console.error('Error fetching events from Ticketmaster:', error);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Route for event details page
+router.get('/events/:eventId', async (req, res) => {
+  try {
+    const eventId = req.params.eventId;
+    const apiKey = process.env.TICKETMASTER_API_KEY;
+
+    // Fetch event details from the Ticketmaster API based on eventId
+    const url = `https://app.ticketmaster.com/discovery/v2/events/${eventId}.json?apikey=${apiKey}`;
+    const response = await axios.get(url);
+    const eventDetails = response.data || {}; // Event details from Ticketmaster API
+
+    // Render the event.handlebars template with the fetched event details
+    res.render('event', { event: eventDetails });
+  } catch (error) {
+    console.error('Error fetching event details from Ticketmaster:', error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
