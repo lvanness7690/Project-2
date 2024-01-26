@@ -3,14 +3,25 @@ const axios = require('axios');
 require('dotenv').config();
 const router = express.Router();
 const { Event } = require('../models');
-const session = require('express-session'); // Import express-session
+const session = require('express-session');
 
 // Configure express-session
 router.use(session({
-  secret: 'your-secret-key', // Change this to a more secure secret
+  secret: 'your-secret-key',
   resave: false,
   saveUninitialized: true,
 }));
+
+// Define the withAuth middleware
+const withAuth = (req, res, next) => {
+  if (!req.session.isLoggedIn) {
+    // If the user is not logged in, redirect to the login page or do something else
+    res.redirect('/login'); // You can replace '/login' with the actual login route
+  } else {
+    // User is logged in, proceed to the next middleware or route handler
+    next();
+  }
+};
 
 // Route for the home page
 router.get('/', (req, res) => {
@@ -24,8 +35,8 @@ router.get('/', (req, res) => {
   }
 });
 
-// Route for the events page
-router.get('/events', async (req, res) => {
+// Route for the events page (protected with withAuth middleware)
+router.get('/events', withAuth, async (req, res) => {
   try {
     res.render('events'); // Renders events.handlebars
   } catch (error) {
