@@ -111,4 +111,29 @@ router.get('/dashboard', async (req, res) => {
     }
 });
 
+router.post('/api/attend/:eventId', async (req, res) => {
+  try {
+      const { eventId } = req.params;
+      const userId = req.session.userId; // Make sure this is being set when the user logs in
+
+      if (!userId) {
+          // If there is no user in session, send an unauthorized response
+          return res.status(401).json({ message: 'User must be logged in to attend' });
+      }
+
+      // Record the user's attendance to the event
+      await UserEvent.create({
+          userId,
+          eventId
+      });
+
+      // Send a JSON response indicating success
+      res.json({ message: 'Attendance recorded' });
+  } catch (error) {
+      console.error('Error attending event:', error);
+      // Send a server error response
+      res.status(500).json({ error: 'Error attending event' });
+  }
+});
+
 module.exports = router;

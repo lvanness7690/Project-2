@@ -21,7 +21,7 @@ UserEvent.init({
 }, {
     sequelize,
     modelName: 'UserEvent',
-    timestamps: false,
+    timestamps: true,
     underscored: true,
 });
 
