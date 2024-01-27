@@ -1,8 +1,4 @@
-// controllers/api/index.js
-// Aggregating all API routes
-
 const router = require('express').Router();
-
 // Import API route files
 const eventRoutes = require('./events');
 const messageRoutes = require('./messages');

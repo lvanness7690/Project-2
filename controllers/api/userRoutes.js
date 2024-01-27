@@ -1,12 +1,8 @@
 const router = require("express").Router();
 const User = require("../../models/User");
 
-
-
-
 // POST route for user registration
 router.post('/register', async (req, res) => {
-
     try {
         const newUser = await User.create(req.body);
         res.redirect('/events'); // Redirect to the events page after successful registration
