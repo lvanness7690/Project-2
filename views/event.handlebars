@@ -10,22 +10,25 @@
 <article class="container mx-auto p-4 event-details">
     <!-- Event Title -->
     <h2 class="text-3xl font-bold my-4 event-title">{{event.name}}</h2>
-    
+
     <!-- Event Date -->
     <p class="event-date">Date: {{event.date}}</p>
-    
+
     <!-- Event Location -->
     <p class="event-location">Location: {{event.location}}</p>
 
     <!-- Event Photo (if available) -->
     <img src="{{event.image}}" alt="{{event.name}}" class="max-w-full my-4 event-image">
-    
+
     <!-- Event Description (if available) -->
     <p class="event-description">{{event.description}}</p>
 
+    <!-- Attending Button -->
+    <button id="attendButton" data-event-id="{{event.id}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Attend</button>
+
     <!-- Attending List -->
     <h3 class="font-semibold mt-4">Attending:</h3>
-    <ul>
+    <ul id="attendingList">
         {{#each event.attendees as |attendee|}}
             <li>{{attendee.name}}</li>
         {{/each}}
@@ -33,10 +36,17 @@
 
     <!-- Message Board Section -->
     <h3 class="font-semibold mt-4">Messages:</h3>
-    <div class="border p-2 message-board">
+    <div id="messageBoard" class="border p-2">
         {{#each event.messages as |message|}}
             <p>{{message.content}}</p>
         {{/each}}
     </div>
+    <!-- Post a new message -->
+    <form id="postMessageForm">
+        <textarea id="messageContent" placeholder="Write a message..."></textarea>
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Post Message</button>
+    </form>
 </article>
 
+<!-- Include JavaScript for attending and message board functionality -->
+<script src="/js/eventPage.js"></script>
