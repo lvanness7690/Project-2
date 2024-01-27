@@ -1,6 +1,3 @@
-// models/User.js
-// Sequelize model definition for Users
-
 const { DataTypes, Model } = require('sequelize');
 const bcrypt = require('bcrypt');
 const sequelize = require('../config/connection');
