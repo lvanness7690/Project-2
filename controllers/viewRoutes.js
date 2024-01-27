@@ -69,6 +69,17 @@ router.get('/event/:eventId', async (req, res) => {
   }
 });
 
+// Route for the dashboard page
+router.get('/dashboard', async (req, res) => {
+  try {
+    // Add logic to fetch user-specific data if needed
+    res.render('dashboard'); // Renders dashboard.handlebars
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 // Add routes for other handlebars pages here if needed
 
 module.exports = router;
