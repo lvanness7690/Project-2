@@ -34,6 +34,19 @@ router.get('/events', async (req, res) => {
     }
 });
 
+router.get('/logout', (req, res) => {
+    // Destroy the session
+    req.session.destroy(err => {
+      if (err) {
+        console.error('Error destroying session:', err);
+        return res.redirect('/'); // Redirect to home page or another page on error
+      }
+  
+      // Redirect the user after successfully destroying the session
+      res.redirect('/login'); // Redirect to the login page
+    });
+  });
+
 // Route for searching events through the Ticketmaster API
 router.get('/api/search-events', async (req, res) => {
     try {

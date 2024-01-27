@@ -1,6 +1,3 @@
-// controllers/api/messages.js
-// Handles routes related to message operations on events
-
 const express = require('express');
 const router = express.Router();
 const { Event } = require('../../models'); // Correct path assuming standard Express project structure
