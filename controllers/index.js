@@ -1,6 +1,5 @@
 // controllers/index.js
 // Aggregates all controller routes
-
 const router = require('express').Router();
 
 // Import other route groups
