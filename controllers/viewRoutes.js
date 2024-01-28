@@ -2,8 +2,10 @@ const express = require('express');
 const axios = require('axios');
 require('dotenv').config();
 const router = express.Router();
+const bcrypt = require('bcrypt');
 const session = require('express-session');
 const { User, Event, UserEvent } = require('../models'); // Import models
+const authenticate = require('../utils/auth');
 
 // Configure express-session
 router.use(session({
@@ -14,6 +16,7 @@ router.use(session({
 
 // Route for the home page
 router.get('/', (req, res) => {
+   
     if (req.session.userId) {
         // Redirect to events if user is logged in
         res.redirect('/events');
@@ -25,6 +28,7 @@ router.get('/', (req, res) => {
 
 // Route for the events page
 router.get('/events', async (req, res) => {
+    
     try {
         // Render the events page
         res.render('events');
@@ -34,7 +38,48 @@ router.get('/events', async (req, res) => {
     }
 });
 
-router.get('/logout', (req, res) => {
+router.get('/login', (req, res) => {
+    // Check if the user is already logged in
+    if (req.session && req.session.user) {
+      // If logged in, redirect to the events page
+      res.redirect('/events', {logged_in: req.session.logged_in});
+    } else {
+      // If not logged in, render the login page
+      res.render('login'); // Assuming 'login' is the name of your login.handlebars template
+    }
+  });
+
+router.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        // Find user by username or email
+        const user = await User.findOne({
+            $or: [{ username }, { email: username }],
+        });
+
+        if (!user) {
+            return res.status(401).send('Invalid username/email or password');
+        }
+
+        // Compare the provided password with the hashed password in the database
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
+            return res.status(401).send('Invalid username/email or password');
+        }
+
+        // Set up session or generate token for authentication
+
+        // Redirect or send success response
+        res.redirect('/events'); // Redirect to dashboard after successful login
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+router.post('/logout', (req, res) => {
     // Destroy the session
     req.session.destroy(err => {
       if (err) {
@@ -64,6 +109,7 @@ router.get('/api/search-events', async (req, res) => {
 
 // Route for individual event details
 router.get('/event/:eventId', async (req, res) => {
+   
   try {
       const eventId = req.params.eventId;
       const apiKey = process.env.TICKETMASTER_API_KEY;
@@ -103,6 +149,7 @@ router.post('/api/attend/:eventId', async (req, res) => {
 
 // Route for the user's dashboard page
 router.get('/dashboard', async (req, res) => {
+   
     try {
         if (!req.session.userId) {
             // Redirect to home page if user is not logged in
