@@ -28,10 +28,7 @@ Event.init({
         type: DataTypes.DATE,
         allowNull: true,
     },
-    attendees: {
-        type: DataTypes.JSON,
-        allowNull: true,
-    }
+
 },{
     sequelize,
     modelName: 'Event',

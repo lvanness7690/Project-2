@@ -3,7 +3,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { Event, User } = require('../../models'); // Correct path assuming standard Express project structure
+const { Event, User, UserEvent } = require('../../models'); // Correct path assuming standard Express project structure
 
 // GET all events
 router.get('/', async (req, res) => {
@@ -22,15 +22,20 @@ router.get('/:eventId/attendees', async (req, res) => {
 
     try {
         const event = await Event.findByPk(eventId, {
-            include: [{ model: User }] // Assuming there's an association set up to include users
+            include: [{ 
+            model: User,
+            through: UserEvent,
+         }] // Assuming there's an association set up to include users
         });
 
         if (!event) {
             return res.status(404).json({ error: 'Event not found' });
         }
 
+        const attendees = event.Users;
+
         // Assuming that `attendees` is a properly formatted JSON field or association
-        res.status(200).json(event.attendees);
+        res.status(200).json(attendees);
     } catch (error) {
         console.error('Error fetching attendees:', error);
         res.status(500).json({ error: 'Internal Server Error' });

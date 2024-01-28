@@ -122,6 +122,10 @@ router.get('/event/:eventId', async (req, res) => {
     // Check if the event already exists in the Event model
     const existingEvent = await Event.findOne({
         where: { id: eventId}, // Adjust the condition based on your model
+        include: [{
+            model: User,
+            as: 'users',
+          }],
       });
   
       if (existingEvent) {
