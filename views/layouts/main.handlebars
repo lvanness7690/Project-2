@@ -11,7 +11,7 @@
     <header class="bg-blue-500 p-4 text-white text-lg font-semibold">
         <div class="container mx-auto">Event Connect</div>
 
-        
+    
     <button id="logoutButton">Logout</button>
       
         
@@ -24,11 +24,10 @@
     <footer class="bg-blue-500 p-4 mt-8 text-white text-center">
         © 2024 Event Connect
     </footer>
-    
+   {
     <script>
-    document.getElementById('logoutButton').addEventListener('click', logout);
-
-    function logout() {
+    document.getElementById('logoutButton').addEventListener('click', function () {
+        event.preventDefault();
         // Assuming you have a logout endpoint on the server, for example, "/logout"
         fetch('/logout', {
             method: 'POST',
@@ -36,8 +35,6 @@
                 'Content-Type': 'application/json'
                 // Add any additional headers if needed (e.g., authentication token)
             },
-            // You can include a request body if needed (e.g., to send additional data)
-            // body: JSON.stringify({ /* your data */ })
         })
         .then(response => {
             if (response.ok) {
@@ -50,8 +47,10 @@
         .catch(error => {
             console.error('Error during logout:', error);
         });
-    }
+    });
+    
 </script>
+
 
 </body>
 </html>

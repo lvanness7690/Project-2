@@ -40,7 +40,7 @@ router.get('/:eventId/attendees', async (req, res) => {
 // Add an attendee to a specific event
 router.post('/:eventId/attendees', async (req, res) => {
     const eventId = req.params.eventId;
-    const userId = req.body.userId;
+    const userId = req.session.userId;
 
     try {
         // Assuming there's a many-to-many relationship between Events and Users
@@ -53,6 +53,12 @@ router.post('/:eventId/attendees', async (req, res) => {
 
         // Add the user as an attendee
         await event.addUser(user); // This method is automatically created by Sequelize for many-to-many relations
+
+           // Get the updated event with attendees
+        const updatedEvent = await Event.findOne({
+        where: { id: eventId },
+        include: [{ model: User, as: 'users', attributes: ['id', 'username'] }], // Include attendees in the response
+        });
 
         res.status(201).json({ message: 'Attendee added successfully' });
     } catch (error) {

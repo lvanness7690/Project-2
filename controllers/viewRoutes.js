@@ -5,7 +5,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const { User, Event, UserEvent } = require('../models'); // Import models
-const authenticate = require('../utils/auth');
+
 
 // Configure express-session
 router.use(session({
@@ -70,6 +70,8 @@ router.post('/login', async (req, res) => {
         }
 
         // Set up session or generate token for authentication
+        req.session.userId = user.id; // Save userId in session
+        req.session.isLoggedIn = true;   // Mark the user as logged in
 
         // Redirect or send success response
         res.redirect('/events'); // Redirect to dashboard after successful login
@@ -145,18 +147,7 @@ router.get('/event/:eventId', async (req, res) => {
   }
 });
 
-// Route for attending an event
-router.post('/api/attend/:eventId', async (req, res) => {
-    try {
-        const eventId = req.params.eventId;
-        const userId = req.session.userId; // Get user ID from session
-        await UserEvent.create({ userId, eventId }); // Create a record in UserEvent table
-        res.json({ message: 'Attendance recorded' });
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).send('Internal Server Error');
-    }
-});
+
 
 // Route for the user's dashboard page
 router.get('/dashboard', async (req, res) => {
@@ -165,6 +156,7 @@ router.get('/dashboard', async (req, res) => {
         if (!req.session.userId) {
             // Redirect to home page if user is not logged in
             res.redirect('/');
+            
             return;
         }
 
