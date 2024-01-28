@@ -5,7 +5,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const { User, Event, UserEvent } = require('../models'); // Import models
-const authenticate = require('../utils/auth');
+
 
 // Configure express-session
 router.use(session({
@@ -70,6 +70,8 @@ router.post('/login', async (req, res) => {
         }
 
         // Set up session or generate token for authentication
+        req.session.userId = user.id; // Save userId in session
+        req.session.isLoggedIn = true;   // Mark the user as logged in
 
         // Redirect or send success response
         res.redirect('/events'); // Redirect to dashboard after successful login
@@ -117,35 +119,39 @@ router.get('/event/:eventId', async (req, res) => {
       const response = await axios.get(url);
       const eventData = response.data;
 
-      // Reformat the event data to match the expected structure in the Handlebars template
-      const event = {
+    // Check if the event already exists in the Event model
+    const existingEvent = await Event.findOne({
+        where: { id: eventId}, // Adjust the condition based on your model
+        include: [{
+            model: User,
+            as: 'users',
+          }],
+      });
+  
+      if (existingEvent) {
+        // If the event exists, render the event details using your EJS template
+        res.render('event', { event: existingEvent.toJSON() });
+      } else {
+        // If the event doesn't exist, create a new entry in the Event model
+        const newEvent = await Event.create({
+          id: eventId,
           name: eventData.name,
           date: eventData.dates.start.localDate,
           location: eventData._embedded?.venues[0]?.name,
           image: eventData.images[0]?.url,
           description: eventData.info,
-          id: eventId  // Add the event ID for use in the attending button
-      };
-
-      res.render('event', { event });
+        });
+  
+        // Render the event details using your EJS template
+        res.render('event', { event: newEvent.toJSON() });
+      }
   } catch (error) {
       console.error('Error fetching event details:', error);
       res.status(500).send('Internal Server Error');
   }
 });
 
-// Route for attending an event
-router.post('/api/attend/:eventId', async (req, res) => {
-    try {
-        const eventId = req.params.eventId;
-        const userId = req.session.userId; // Get user ID from session
-        await UserEvent.create({ userId, eventId }); // Create a record in UserEvent table
-        res.json({ message: 'Attendance recorded' });
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).send('Internal Server Error');
-    }
-});
+
 
 // Route for the user's dashboard page
 router.get('/dashboard', async (req, res) => {
@@ -154,6 +160,7 @@ router.get('/dashboard', async (req, res) => {
         if (!req.session.userId) {
             // Redirect to home page if user is not logged in
             res.redirect('/');
+            
             return;
         }
 

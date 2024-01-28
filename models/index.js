@@ -5,7 +5,7 @@ const Message = require('./Message');
 
 // Define associations here
 User.belongsToMany(Event, { through: UserEvent, foreignKey: 'userId' });
-Event.belongsToMany(User, { through: UserEvent, foreignKey: 'eventId' });
+Event.belongsToMany(User, { through: UserEvent, foreignKey: 'eventId', as: 'users', });
 
 // These associations allow you to include Event when querying UserEvent
 UserEvent.belongsTo(User, { foreignKey: 'userId' });
