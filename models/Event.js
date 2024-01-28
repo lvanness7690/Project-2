@@ -8,17 +8,25 @@ Event.init({
         type: DataTypes.STRING,
         primaryKey: true,
     },
-    title: {
+    name: {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    location: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    image: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     description: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
     },
     date: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: true,
     },
     attendees: {
         type: DataTypes.JSON,

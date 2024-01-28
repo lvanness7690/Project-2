@@ -117,17 +117,28 @@ router.get('/event/:eventId', async (req, res) => {
       const response = await axios.get(url);
       const eventData = response.data;
 
-      // Reformat the event data to match the expected structure in the Handlebars template
-      const event = {
+    // Check if the event already exists in the Event model
+    const existingEvent = await Event.findOne({
+        where: { id: eventId}, // Adjust the condition based on your model
+      });
+  
+      if (existingEvent) {
+        // If the event exists, render the event details using your EJS template
+        res.render('event', { event: existingEvent.toJSON() });
+      } else {
+        // If the event doesn't exist, create a new entry in the Event model
+        const newEvent = await Event.create({
+          id: eventId,
           name: eventData.name,
           date: eventData.dates.start.localDate,
           location: eventData._embedded?.venues[0]?.name,
           image: eventData.images[0]?.url,
           description: eventData.info,
-          id: eventId  // Add the event ID for use in the attending button
-      };
-
-      res.render('event', { event });
+        });
+  
+        // Render the event details using your EJS template
+        res.render('event', { event: newEvent.toJSON() });
+      }
   } catch (error) {
       console.error('Error fetching event details:', error);
       res.status(500).send('Internal Server Error');
