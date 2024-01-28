@@ -1,0 +1,44 @@
+<!-- Your login page content here -->
+<form id="loginForm">
+    <label for="username">Username/Email:</label>
+    <input type="text" id="username" name="username" required>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="button" id="loginButton">Login</button>
+    <script>  function redirectToMainPage() {
+        // Redirect to the root URL (main page)
+        window.location.href = "/";
+    }</script>
+     <button type="button" id="register" onclick="redirectToMainPage()">Register</button>
+</form>
+
+
+<script>
+
+    document.getElementById('loginButton').addEventListener('click', async () => {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+    
+
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            if (response.ok) {
+                window.location.href = '/events';
+            } else {
+                console.error('Login failed:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+        }
+    });
+</script>

@@ -10,9 +10,11 @@
 
     <header class="bg-blue-500 p-4 text-white text-lg font-semibold">
         <div class="container mx-auto">Event Connect</div>
-         <form action="/logout" method="post">
-        <button type="submit">Logout</button>
-    </form>
+
+        
+    <button id="logoutButton">Logout</button>
+      
+        
     </header>
 
     <div class="container mx-auto mt-4 p-4 bg-white rounded shadow">
@@ -22,6 +24,34 @@
     <footer class="bg-blue-500 p-4 mt-8 text-white text-center">
         © 2024 Event Connect
     </footer>
+    
+    <script>
+    document.getElementById('logoutButton').addEventListener('click', logout);
+
+    function logout() {
+        // Assuming you have a logout endpoint on the server, for example, "/logout"
+        fetch('/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                // Add any additional headers if needed (e.g., authentication token)
+            },
+            // You can include a request body if needed (e.g., to send additional data)
+            // body: JSON.stringify({ /* your data */ })
+        })
+        .then(response => {
+            if (response.ok) {
+                // Redirect to the login page or perform any other desired actions
+                window.location.href = '/login';
+            } else {
+                console.error('Logout failed:', response.statusText);
+            }
+        })
+        .catch(error => {
+            console.error('Error during logout:', error);
+        });
+    }
+</script>
 
 </body>
 </html>
