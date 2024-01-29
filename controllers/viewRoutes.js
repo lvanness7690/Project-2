@@ -65,7 +65,7 @@ router.post('/login', async (req, res) => {
         if (!user) {
             return res.status(401).send('Invalid username/email or password');
         }
-
+console.log(user);
         // Compare the provided password with the hashed password in the database
         const passwordMatch = await user.checkPassword(req.body.password);
 
