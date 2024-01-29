@@ -11,13 +11,9 @@ Event.belongsToMany(User, { through: UserEvent, foreignKey: 'eventId', as: 'user
 UserEvent.belongsTo(User, { foreignKey: 'userId' });
 UserEvent.belongsTo(Event, { foreignKey: 'eventId' });
 
-Event.hasMany(Message, {
-    foreignKey: 'event_id',
-    onDelete: 'NO ACTION'
-  });
-  
-Message.belongsTo(Event, {
-    foreignKey: 'event_id'
+User.hasMany(Message, { foreignKey: 'userId' });
+Message.belongsTo(User, {
+    foreignKey: 'userId',
   });
 
-module.exports = { User, Event, UserEvent };
+module.exports = { User, Message, Event, UserEvent};

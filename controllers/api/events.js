@@ -16,32 +16,6 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Get attendees for a specific event
-router.get('/:eventId/attendees', async (req, res) => {
-    const eventId = req.params.eventId;
-
-    try {
-        const event = await Event.findByPk(eventId, {
-            include: [{ 
-            model: User,
-            through: UserEvent,
-         }] // Assuming there's an association set up to include users
-        });
-
-        if (!event) {
-            return res.status(404).json({ error: 'Event not found' });
-        }
-
-        const attendees = event.Users;
-
-        // Assuming that `attendees` is a properly formatted JSON field or association
-        res.status(200).json(attendees);
-    } catch (error) {
-        console.error('Error fetching attendees:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
-
 // Add an attendee to a specific event
 router.post('/:eventId/attendees', async (req, res) => {
     const eventId = req.params.eventId;

@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         const content = messageContent.value.trim();
         if (content) {
-            fetch(`/api/events/${eventId}/messages`, {
+            fetch(`/api/messages/${eventId}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ content })
