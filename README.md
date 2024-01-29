@@ -38,7 +38,7 @@ We initially built the database and then setup the routes and user pages as a te
 # Project Links
 
 Deployed Webpage:
-[]
+[https://project-2-event-planner-3ca0203f2eb1.herokuapp.com]
 
 GitHub Repository:
 [https://github.com/lvanness7690/Project-2]
