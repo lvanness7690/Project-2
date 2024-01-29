@@ -4,7 +4,7 @@ require('dotenv').config();
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const session = require('express-session');
-const { User, Event, UserEvent } = require('../models'); // Import models
+const { User, Event, Message, UserEvent } = require('../models'); // Import models
 
 
 // Configure express-session
@@ -14,7 +14,7 @@ router.use(session({
     saveUninitialized: true,
 }));
 
-// Route for the home page
+// Route for the registraion/home page
 router.get('/', (req, res) => {
    
     if (req.session.userId) {
@@ -38,6 +38,7 @@ router.get('/events', async (req, res) => {
     }
 });
 
+//Renders the Login page
 router.get('/login', (req, res) => {
     // Check if the user is already logged in
     if (req.session && req.session.user) {
@@ -49,6 +50,7 @@ router.get('/login', (req, res) => {
     }
   });
 
+//Login Request
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
@@ -81,6 +83,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
+//Logout Request
 router.post('/logout', (req, res) => {
     // Destroy the session
     req.session.destroy(err => {
@@ -111,7 +114,6 @@ router.get('/api/search-events', async (req, res) => {
 
 // Route for individual event details
 router.get('/event/:eventId', async (req, res) => {
-   
   try {
       const eventId = req.params.eventId;
       const apiKey = process.env.TICKETMASTER_API_KEY;
@@ -129,8 +131,28 @@ router.get('/event/:eventId', async (req, res) => {
       });
   
       if (existingEvent) {
+        const messagesData = await Message.findAll({
+            where: { eventId: eventId },
+            include: [{
+                model: User,
+                attributes: ['username'], // Include only the necessary attributes from User model
+              }],
+          });
+
+        // Add this before the serialization
+        console.log('Messages data before serialization:', messagesData);
+
+        // Serialize messages by extracting relevant properties
+        const serializedMessages = messagesData.map(message => ({
+            content: message.content,
+            createdAt: message.createdAt,
+            username: message.user ? message.user.username : null,
+            // Add other properties as needed
+        }));
+
+        console.log('Messages:', serializedMessages);
         // If the event exists, render the event details using your EJS template
-        res.render('event', { event: existingEvent.toJSON() });
+        res.render('event', { event: existingEvent.toJSON(), messages: serializedMessages });
       } else {
         // If the event doesn't exist, create a new entry in the Event model
         const newEvent = await Event.create({
@@ -141,9 +163,9 @@ router.get('/event/:eventId', async (req, res) => {
           image: eventData.images[0]?.url,
           description: eventData.info,
         });
-  
+      
         // Render the event details using your EJS template
-        res.render('event', { event: newEvent.toJSON() });
+        res.render('event', { event: newEvent.toJSON()});
       }
   } catch (error) {
       console.error('Error fetching event details:', error);
@@ -176,31 +198,6 @@ router.get('/dashboard', async (req, res) => {
         console.error('Error loading dashboard:', error);
         res.status(500).send('Internal Server Error');
     }
-});
-
-router.post('/api/attend/:eventId', async (req, res) => {
-  try {
-      const { eventId } = req.params;
-      const userId = req.session.userId; // Make sure this is being set when the user logs in
-
-      if (!userId) {
-          // If there is no user in session, send an unauthorized response
-          return res.status(401).json({ message: 'User must be logged in to attend' });
-      }
-
-      // Record the user's attendance to the event
-      await UserEvent.create({
-          userId,
-          eventId
-      });
-
-      // Send a JSON response indicating success
-      res.json({ message: 'Attendance recorded' });
-  } catch (error) {
-      console.error('Error attending event:', error);
-      // Send a server error response
-      res.status(500).json({ error: 'Error attending event' });
-  }
 });
 
 module.exports = router;
