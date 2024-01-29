@@ -67,7 +67,7 @@ router.post('/login', async (req, res) => {
         }
 console.log(user);
         // Compare the provided password with the hashed password in the database
-        const passwordMatch = await user.checkPassword(req.body.password);
+        const passwordMatch = await user.checkPassword(password);
 
         if (!passwordMatch) {
             return res.status(401).send('Invalid password');
