@@ -10,7 +10,9 @@
 
     <header class="bg-blue-500 p-4 text-white text-lg font-semibold flex justify-between items-center">
         <div class="container mx-auto">Event Connect</div>
+       {{#if loggedIn}}
         <button id="logoutButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Logout</button>
+        {{/if}}
     </header>
 
     <div class="container mx-auto mt-4 p-4 bg-white rounded shadow">
@@ -20,27 +22,6 @@
     <footer class="bg-blue-500 p-4 mt-8 text-white text-center">
         © 2024 Event Connect
     </footer>
-
-    <script>
-        document.getElementById('logoutButton').addEventListener('click', function (event) {
-            event.preventDefault();
-            fetch('/logout', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            })
-            .then(response => {
-                if (response.ok) {
-                    window.location.href = '/login';
-                } else {
-                    console.error('Logout failed:', response.statusText);
-                }
-            })
-            .catch(error => {
-                console.error('Error during logout:', error);
-            });
-        });
-    </script>
+<script src="/js/logout.js"></script>
 </body>
 </html>

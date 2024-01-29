@@ -8,8 +8,7 @@ const userRoutes = require('./userRoutes');
 router.use('/events', eventRoutes);
 router.use('/messages', messageRoutes);
 
-// Note: Removed the /users prefix to allow direct access to /register
-// If you need other user routes to be prefixed with /users, you'll need to adjust this setup
-router.use('/', userRoutes); // Changed from '/users' to '/'
+
+router.use('/', userRoutes); 
 
 module.exports = router;

@@ -4,6 +4,7 @@ const authenticate = (req, res, next) => {
       next();
     } else {
       res.status(401).json({ error: 'Unauthorized' });
+      console.log( req.session.user)
     }
   };
   
