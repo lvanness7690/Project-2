@@ -44,7 +44,7 @@ sessionStore.sync();
 app.use(routes);
 
 // Sync Sequelize models to the database, then start the server
-sequelize.sync({ force: false }).then(() => {
+sequelize.sync({ force: true }).then(() => {
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
     });
