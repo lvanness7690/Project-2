@@ -16,14 +16,15 @@ router.use(session({
 
 // Route for the registraion/home page
 router.get('/', (req, res) => {
-   
-    if (req.session.userId) {
-        // Redirect to events if user is logged in
-        res.redirect('/events');
-    } else {
-        // Render the home page for non-logged-in users
-        res.render('home');
-    }
+  const loggedIn = req.session.isLoggedIn || false; // Set loggedIn to true if user is logged in, otherwise false
+
+  if (loggedIn) {
+      // Redirect to events if user is logged in
+      res.redirect('/events');
+  } else {
+      // Render the home page for non-logged-in users and pass the loggedIn variable
+      res.render('home', { loggedIn });
+  }
 });
 
 // Route for the events page
@@ -40,15 +41,15 @@ router.get('/events', async (req, res) => {
 
 //Renders the Login page
 router.get('/login', (req, res) => {
-    // Check if the user is already logged in
-    if (req.session && req.session.user) {
-      // If logged in, redirect to the events page
-      res.redirect('/events', {logged_in: req.session.logged_in});
-    } else {
-      // If not logged in, render the login page
-      res.render('login'); // Assuming 'login' is the name of your login.handlebars template
-    }
-  });
+  // Check if the user is already logged in
+  if (req.session && req.session.user) {
+    // If logged in, redirect to the events page with a query parameter
+    res.redirect('/events?logged_in=true');
+  } else {
+    // If not logged in, render the login page
+    res.render('login'); // Assuming 'login' is the name of your login.handlebars template
+  }
+});
 
 //Login Request
 router.post('/login', async (req, res) => {
