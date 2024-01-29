@@ -9,12 +9,12 @@ const { User, Event, Message, UserEvent } = require('../models'); // Import mode
 
 
 // Configure express-session
-router.use(session({
-    secret: process.env.SESSION_SECRET, // Secret key for session, ideally kept in .env file
-    resave: false,
-    saveUninitialized: true,
+// router.use(session({
+//    secret: process.env.SESSION_SECRET, // Secret key for session, ideally kept in .env file
+//    resave: false,
+//    saveUninitialized: true,
    
-}));
+// }));
 
 // Route for the registraion/home page
 router.get('/', (req, res) => {

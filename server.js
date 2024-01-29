@@ -33,8 +33,8 @@ app.use(session({
     secret: process.env.SESSION_SECRET, // Use environment variable for the session secret
     store: sessionStore, // Tell express-session to use SequelizeStore
     resave: false, // Avoid resaving session if unmodified
-    saveUninitialized: true, // Don't save uninitialized sessions
-    cookie: { secure: process.env.NODE_ENV === "production" } // Use secure cookies in production
+    saveUninitialized: false, // Don't save uninitialized sessions
+    cookie: { secure: process.env.NODE_ENV === "production", sameSite: "none" } // Use secure cookies in production
 }));
 
 // Sync the session store
