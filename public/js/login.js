@@ -1,27 +1,26 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.getElementById('loginForm');
-    const loginButton = document.getElementById('loginButton');
+document.getElementById('loginButton').addEventListener('click', async () => {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-    loginButton.addEventListener('click', async () => {
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
+    try {
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password }),
+        });
 
-        try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }),
-            });
-
-            if (response.ok) {
-                window.location.href = '/dashboard';
-            } else {
-                alert('Failed to log in. Please check your username and password.');
-            }
-        } catch (error) {
-            console.error('An error occurred:', error);
+        if (response.ok) {
+            window.location.href = '/events';
+        } else {
+            console.error('Login failed:', response.statusText);
         }
-    });
+    } catch (error) {
+        console.error('Login error:', error);
+    }
 });
+
+function redirectToMainPage() {
+    window.location.href = "/";
+}
