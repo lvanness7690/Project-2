@@ -59,7 +59,7 @@ router.post('/login', async (req, res) => {
     try {
         // Find user by username or email
         const user = await User.findOne({
-            $or: [{ username }, { email: username }],
+            $or: [{ username:username }, { email: username }],
         });
 
         if (!user) {
