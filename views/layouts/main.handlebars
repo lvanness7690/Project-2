@@ -8,13 +8,9 @@
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
 
-    <header class="bg-blue-500 p-4 text-white text-lg font-semibold">
+    <header class="bg-blue-500 p-4 text-white text-lg font-semibold flex justify-between items-center">
         <div class="container mx-auto">Event Connect</div>
-
-        
-    <button id="logoutButton">Logout</button>
-      
-        
+        <button id="logoutButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Logout</button>
     </header>
 
     <div class="container mx-auto mt-4 p-4 bg-white rounded shadow">
@@ -24,34 +20,27 @@
     <footer class="bg-blue-500 p-4 mt-8 text-white text-center">
         © 2024 Event Connect
     </footer>
-    
+
     <script>
-    document.getElementById('logoutButton').addEventListener('click', logout);
-
-    function logout() {
-        // Assuming you have a logout endpoint on the server, for example, "/logout"
-        fetch('/logout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-                // Add any additional headers if needed (e.g., authentication token)
-            },
-            // You can include a request body if needed (e.g., to send additional data)
-            // body: JSON.stringify({ /* your data */ })
-        })
-        .then(response => {
-            if (response.ok) {
-                // Redirect to the login page or perform any other desired actions
-                window.location.href = '/login';
-            } else {
-                console.error('Logout failed:', response.statusText);
-            }
-        })
-        .catch(error => {
-            console.error('Error during logout:', error);
+        document.getElementById('logoutButton').addEventListener('click', function (event) {
+            event.preventDefault();
+            fetch('/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/login';
+                } else {
+                    console.error('Logout failed:', response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error('Error during logout:', error);
+            });
         });
-    }
-</script>
-
+    </script>
 </body>
 </html>

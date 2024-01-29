@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle 'Attend' button click
     attendButton.addEventListener('click', () => {
-        fetch(`/api/attend/${eventId}`, { method: 'POST' })
+        fetch(`/api/events/${eventId}/attendees`, { method: 'POST' })
             .then(response => {
                 if (response.ok) {
                     // Update UI to reflect attendance
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         const content = messageContent.value.trim();
         if (content) {
-            fetch(`/api/events/${eventId}/messages`, {
+            fetch(`/api/messages/${eventId}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ content })
