@@ -1,4 +1,4 @@
-// public/js/eventPage.js
+// Event listeners for the Event page
 
 document.addEventListener('DOMContentLoaded', () => {
     const attendButton = document.getElementById('attendButton');

@@ -43,7 +43,7 @@
         <h3 class="font-semibold text-xl mt-4 mb-2">Messages:</h3>
         <div id="messageBoard" class="border p-2">
             {{#each messages as |message|}}
-                <li>{{message.username}} - {{message.content}} - {{message.createdAt}}</li>
+                <p><b>{{message.username}}</b>: {{message.content}}</p>
             {{/each}}
         </div>
         <!-- Message Input Form -->
