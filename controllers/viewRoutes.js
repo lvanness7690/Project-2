@@ -4,6 +4,7 @@ require('dotenv').config();
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const authenticate = require('../utils/auth');
 const { User, Event, Message, UserEvent } = require('../models'); // Import models
 
 
@@ -12,12 +13,12 @@ router.use(session({
     secret: process.env.SESSION_SECRET, // Secret key for session, ideally kept in .env file
     resave: false,
     saveUninitialized: true,
+   
 }));
 
 // Route for the registraion/home page
 router.get('/', (req, res) => {
-  const loggedIn = req.session.isLoggedIn || false; // Set loggedIn to true if user is logged in, otherwise false
-
+    const loggedIn = req.session.isLoggedIn || false; // Set loggedIn to true if user is logged in, otherwise false
   if (loggedIn) {
       // Redirect to events if user is logged in
       res.redirect('/events');
@@ -32,7 +33,7 @@ router.get('/events', async (req, res) => {
     
     try {
         // Render the events page
-        res.render('events');
+        res.render('events', {loggedIn: req.session.loggedIn});
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -153,7 +154,7 @@ router.get('/event/:eventId', async (req, res) => {
 
         console.log('Messages:', serializedMessages);
         // If the event exists, render the event details using your EJS template
-        res.render('event', { event: existingEvent.toJSON(), messages: serializedMessages });
+        res.render('event', { event: existingEvent.toJSON(), messages: serializedMessages});
       } else {
         // If the event doesn't exist, create a new entry in the Event model
         const newEvent = await Event.create({
@@ -166,7 +167,7 @@ router.get('/event/:eventId', async (req, res) => {
         });
       
         // Render the event details using your EJS template
-        res.render('event', { event: newEvent.toJSON()});
+        res.render('event', { event: newEvent.toJSON() });
       }
   } catch (error) {
       console.error('Error fetching event details:', error);
