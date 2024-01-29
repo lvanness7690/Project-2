@@ -70,7 +70,7 @@ router.post('/login', async (req, res) => {
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
-            return res.status(401).send('Invalid username/email or password');
+            return res.status(401).send('Invalid password');
         }
 
         // Set up session or generate token for authentication
