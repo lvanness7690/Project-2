@@ -67,7 +67,7 @@ router.post('/login', async (req, res) => {
         }
 
         // Compare the provided password with the hashed password in the database
-        const passwordMatch = bcrypt.compareSync(password, user.password);
+        const passwordMatch = await userData.checkPassword(req.body.password);
 
         if (!passwordMatch) {
             return res.status(401).send('Invalid password');
