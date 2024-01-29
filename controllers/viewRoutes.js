@@ -55,7 +55,7 @@ router.get('/login', (req, res) => {
 //Login Request
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
-
+console.log(username);
     try {
         // Find user by username or email
         const user = await User.findOne({
