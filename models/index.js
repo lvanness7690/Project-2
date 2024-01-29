@@ -1,6 +1,6 @@
 const User = require('./User');
 const Event = require('./Event');
-const UserEvent = require('./UserEvent');
+const UserEvent = require('./userEvent');
 const Message = require('./Message');
 
 // Define associations here
