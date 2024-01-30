@@ -67,9 +67,9 @@ console.log(user);
 
         // Set up session or generate token for authentication
         req.session.save(() => {
-            req.session.userId = newUser.id; // Save userId in session
+            req.session.userId = user.id; // Save userId in session
             req.session.isLoggedIn = true;   // Mark the user as logged in
-            res.status(200).json(newUser);
+            res.status(200).json(user);
         });
 
         // Redirect or send success response
