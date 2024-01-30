@@ -8,14 +8,6 @@ const authenticate = require('../utils/auth');
 const { User, Event, Message, UserEvent } = require('../models'); // Import models
 
 
-// Configure express-session
-// router.use(session({
-//    secret: process.env.SESSION_SECRET, // Secret key for session, ideally kept in .env file
-//    resave: false,
-//    saveUninitialized: true,
-   
-// }));
-
 // Route for the registraion/home page
 router.get('/', (req, res) => {
     const loggedIn = req.session.isLoggedIn || false; // Set loggedIn to true if user is logged in, otherwise false
