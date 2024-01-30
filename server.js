@@ -34,7 +34,7 @@ app.use(session({
     store: sessionStore, // Tell express-session to use SequelizeStore
     resave: false, // Avoid resaving session if unmodified
     saveUninitialized: false, // Don't save uninitialized sessions
-    cookie: { secure:true, sameSite: "none", domain: "project-2-event-planner-3ca0203f2eb1.herokuapp.com", httpOnly: true } // Use secure cookies in production
+    cookie: { secure:true, sameSite: "none"} // Use secure cookies in production
 }));
 
 // Sync the session store
