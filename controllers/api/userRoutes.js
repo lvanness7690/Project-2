@@ -6,8 +6,11 @@ const { User } = require("../../models");
 router.post('/register', async (req, res) => {
     try {
         const newUser = await User.create(req.body);
-        req.session.userId = newUser.id; // Save userId in session
-        req.session.isLoggedIn = true;   // Mark the user as logged in
+        req.session.save(() => {
+            req.session.userId = newUser.id; // Save userId in session
+            req.session.isLoggedIn = true;   // Mark the user as logged in
+            res.status(200).json(newUser);
+        });
         res.redirect('/events');
     } catch (error) {
         console.error('Registration Error:', error);
