@@ -59,7 +59,7 @@ console.log(username);
     try {
         // Find user by username or email
         const user = await User.findOne({
-            $or: [{ username:username }, { email: username }],
+            where:{ username:username },
         });
 
         if (!user) {
