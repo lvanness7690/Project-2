@@ -60,7 +60,7 @@ console.log(username);
 console.log(user);
         // Compare the provided password with the hashed password in the database
         const passwordMatch = await user.checkPassword(password);
-
+console.log(passwordMatch);
         if (!passwordMatch) {
             return res.status(401).send('Invalid password');
         }
@@ -72,8 +72,6 @@ console.log(user);
             res.status(200).json(user);
         });
 
-        // Redirect or send success response
-        res.redirect('/events'); // Redirect to dashboard after successful login
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).send('Internal Server Error');
