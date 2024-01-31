@@ -28,6 +28,7 @@ const sessionStore = new SequelizeStore({
     expiration: 24 * 60 * 60 * 1000  // The maximum age (in milliseconds) of a valid session
 });
 
+app.set('trust proxy', 1);
 // Setup session middleware
 app.use(session({
     secret: process.env.SESSION_SECRET, // Use environment variable for the session secret

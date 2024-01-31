@@ -47,30 +47,31 @@ router.get('/login', (req, res) => {
 //Login Request
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
-
+console.log(username);
     try {
         // Find user by username or email
         const user = await User.findOne({
-            $or: [{ username }, { email: username }],
+            where:{ username:username },
         });
 
         if (!user) {
             return res.status(401).send('Invalid username/email or password');
         }
-
+console.log(user);
         // Compare the provided password with the hashed password in the database
-        const passwordMatch = await bcrypt.compare(password, user.password);
-
+        const passwordMatch = await user.checkPassword(password);
+console.log(passwordMatch);
         if (!passwordMatch) {
-            return res.status(401).send('Invalid username/email or password');
+            return res.status(401).send('Invalid password');
         }
 
         // Set up session or generate token for authentication
-        req.session.userId = user.id; // Save userId in session
-        req.session.isLoggedIn = true;   // Mark the user as logged in
+        req.session.save(() => {
+            req.session.userId = user.id; // Save userId in session
+            req.session.isLoggedIn = true;   // Mark the user as logged in
+            res.status(200).json(user);
+        });
 
-        // Redirect or send success response
-        res.redirect('/events'); // Redirect to dashboard after successful login
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).send('Internal Server Error');
