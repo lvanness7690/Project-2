@@ -25,7 +25,7 @@ router.get('/events', async (req, res) => {
     
     try {
         // Render the events page
-        res.render('events', {loggedIn: req.session.loggedIn});
+        res.render('events', {loggedIn: req.session.isLoggedIn});
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -37,10 +37,10 @@ router.get('/login', (req, res) => {
   // Check if the user is already logged in
   if (req.session && req.session.user) {
     // If logged in, redirect to the events page with a query parameter
-    res.redirect('/events?logged_in=true');
+    res.redirect('/events');
   } else {
     // If not logged in, render the login page
-    res.render('login'); // Assuming 'login' is the name of your login.handlebars template
+    res.render('login', {loggedIn: req.session.isLoggedIn}); // Assuming 'login' is the name of your login.handlebars template
   }
 });
 
@@ -160,7 +160,7 @@ router.get('/event/:eventId', async (req, res) => {
         });
       
         // Render the event details using your EJS template
-        res.render('event', { event: newEvent.toJSON() });
+        res.render('event', { event: newEvent.toJSON(), loggedIn: req.session.isLoggedIn });
       }
   } catch (error) {
       console.error('Error fetching event details:', error);
@@ -188,7 +188,7 @@ router.get('/dashboard', async (req, res) => {
         });
 
         const events = userEvents.map(ue => ue.Event.get({ plain: true }));
-        res.render('dashboard', { events }); // Render the dashboard page with user's events
+        res.render('dashboard', { events, loggedIn: req.session.isLoggedIn}); // Render the dashboard page with user's events
     } catch (error) {
         console.error('Error loading dashboard:', error);
         res.status(500).send('Internal Server Error');
