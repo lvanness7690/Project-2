@@ -8,12 +8,14 @@
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
 
-    <header class="bg-blue-500 p-4 text-white text-lg font-semibold flex justify-between items-center">
-        <div class="container mx-auto">Event Connect</div>
-       {{#if loggedIn}}
-        <button id="logoutButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Logout</button>
-        {{/if}}
-    </header>
+  <header class="bg-blue-500 p-4 text-white text-lg font-semibold flex justify-between items-center">
+    <div class="container mx-auto">Event Connect</div>
+    {{#if loggedIn}}
+    <div class="flex items-center">
+        <button id="logoutButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded border border-white">Logout</button>
+    </div>
+    {{/if}}
+</header>
 
     <div class="container mx-auto mt-4 p-4 bg-white rounded shadow">
         {{{body}}}
