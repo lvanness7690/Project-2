@@ -3,6 +3,7 @@ const router = require('express').Router();
 const eventRoutes = require('./events');
 const messageRoutes = require('./messages');
 const userRoutes = require('./userRoutes');
+const usersController = require('./users');
 
 // Configure the API endpoints to use specific routes
 router.use('/events', eventRoutes);
